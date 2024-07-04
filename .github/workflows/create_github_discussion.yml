@@ -12,4 +12,4 @@ jobs:
         repository_name: sandbox
         title: ハドル
         discussion_category_slug: meeting-notes
-        description_template_path: ./_templates/weekly_meeting_discussion/test.md
+        description_template_path: _templates/weekly_meeting_discussion/test.md
