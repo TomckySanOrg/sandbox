@@ -8,8 +8,6 @@ jobs:
     uses: route06/actions/.github/workflows/create_discussion.yml@baba-add-workflow
     with:
         target_day: sunday
-        owner: TomckySan
-        repository_name: sandbox
         title: ハドル
         discussion_category_slug: meeting-notes
         description_template_path: _templates/weekly_meeting_discussion/test.md
