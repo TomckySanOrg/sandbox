@@ -7,7 +7,6 @@ env:
   # NOTE: MTG開催曜日に合わせて変更してください
   TARGET_DAY: "wednesday"
 
-
 jobs:
   create_discussion:
     runs-on: ubuntu-latest
@@ -20,10 +19,13 @@ jobs:
         run: |
           target_date=$(date -d "next $TARGET_DAY" +%Y/%m/%d)
           echo "target_date=$target_date" >> "$GITHUB_OUTPUT"
+    outputs:
+      target_date: ${{ steps.get_date.outputs.target_date }}
 
-      - name: Run create discussion workflow
-        uses: route06/actions/.github/workflows/create_discussion.yml@update-create-discussion-workflow-1
-        with:
-          title: ${{ steps.get_date.outputs.target_date }} Meeting Title
-          discussion_category_slug: meeting-notes
-          description_template_path: _templates/weekly_meeting_discussion/test.md
+  call_create_discussion:
+    needs: create_discussion
+    uses: route06/actions/.github/workflows/create_discussion.yml@update-create-discussion-workflow-1
+    with:
+      title: ${{ needs.create_discussion.outputs.target_date }} Meeting Title
+      discussion_category_slug: meeting-notes
+      description_template_path: _templates/weekly_meeting_discussion/test.md
