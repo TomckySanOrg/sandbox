@@ -15,4 +15,4 @@ jobs:
     steps:
       - name: Log the calculated next schedule date
         run: |
-          echo "The calculated next schedule date is: ${{ needs.get_next_schedule_date.outputs.target_date }}"
+          echo "The calculated next schedule date is: ${{ needs.get_next_schedule_date.outputs.next_date }}"
