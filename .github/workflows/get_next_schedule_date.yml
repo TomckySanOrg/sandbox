@@ -5,7 +5,7 @@ on:
 
 jobs:
   get_next_schedule_date:
-    uses: route06/actions/.github/workflows/calculate_next_date.yml@test-calculate-next-date
+    uses: route06/actions/.github/workflows/get_next_scheduled_date.yml@test-calculate-next-date
     with:
       target_schedule: weekly
   
@@ -15,4 +15,4 @@ jobs:
     steps:
       - name: Log the calculated next schedule date
         run: |
-          echo "The calculated next schedule date is: ${{ needs.get_next_schedule_date.outputs.next_date }}"
+          echo "The calculated next schedule date is: ${{ needs.get_next_schedule_date.outputs.next_scheduled_date }}"
