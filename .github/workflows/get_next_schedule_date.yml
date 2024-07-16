@@ -6,6 +6,8 @@ on:
 jobs:
   get_next_daily_scheduled_date:
     uses: route06/actions/.github/workflows/get_next_scheduled_date.yml@test-calculate-next-date
+    with:
+      target_schedule: daily
 
   get_next_weekly_scheduled_date:
     uses: route06/actions/.github/workflows/get_next_scheduled_date.yml@test-calculate-next-date
@@ -16,11 +18,13 @@ jobs:
   get_next_monthly_scheduled_date:
     uses: route06/actions/.github/workflows/get_next_scheduled_date.yml@test-calculate-next-date
     with:
+      target_schedule: monthly
       target_date: "10"
 
   get_next_yearly_scheduled_date:
     uses: route06/actions/.github/workflows/get_next_scheduled_date.yml@test-calculate-next-date
     with:
+      target_schedule: yearly
       target_date: "07-20"
 
   log_result:
