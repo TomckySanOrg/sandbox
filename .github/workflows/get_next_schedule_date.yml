@@ -1,0 +1,18 @@
+name: Get next schedule date
+
+on:
+  workflow_dispatch:
+
+jobs:
+  get_next_schedule_date:
+    uses: route06/actions/.github/workflows/calculate_next_date.yml@test-calculate-next-date
+    with:
+      target_schedule: weekly
+  
+  log_result:
+    runs-on: ubuntu-latest
+    needs: get_next_schedule_date
+    steps:
+      - name: Log the calculated next schedule date
+        run: |
+          echo "The calculated next schedule date is: ${{ needs.get_next_schedule_date.outputs.target_date }}"
