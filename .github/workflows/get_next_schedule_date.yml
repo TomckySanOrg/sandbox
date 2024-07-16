@@ -25,7 +25,7 @@ jobs:
     uses: route06/actions/.github/workflows/get_next_scheduled_date.yml@test-calculate-next-date
     with:
       target_schedule: yearly
-      target_date: "07-20"
+      target_yearly_date: "07-20"
 
   log_result:
     runs-on: ubuntu-latest
