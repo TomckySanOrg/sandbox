@@ -37,3 +37,4 @@ jobs:
           echo "The next weekly schedule date is: ${{ needs.get_next_weekly_scheduled_date.outputs.next_scheduled_date }}"
           echo "The next monthly schedule date is: ${{ needs.get_next_monthly_scheduled_date.outputs.next_scheduled_date }}"
           echo "The next yearly schedule date is: ${{ needs.get_next_yearly_scheduled_date.outputs.next_scheduled_date }}"
+          echo $(date -d "2024-02-30" +%Y/%m/%d)
