@@ -52,7 +52,8 @@ jobs:
               // {"template_file_path": "xxx/yyy/zzz.md", "replace_values": {"title": "たいとる", "assign": "たなか", "foo": "こめんと"}}
               // seedファイルに指定されているファイルをテンプレートとしてコメントを作成
               const template = fs.readFileSync(seed['template_file_path'], "utf8")
-              const body = template;
+              let body = template;
+
               const replaceValues = seed['replace_values'];
 
               Object.entries(replaceValues).forEach(([key, value], index) => {
