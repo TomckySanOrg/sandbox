@@ -23,14 +23,14 @@ env:
 
 jobs:
   get_next_scheduled_date:
-    uses: route06/actions/.github/workflows/create_discussion.yml@update-create-discussion-workflow-1
+    uses: route06/actions/.github/workflows/get_next_scheduled_date.yml@add-get-next-scheduled-date-workflow
     with:
       interval: weekly
       target_day: $TARGET_DAY
   
   create_discussion:
     needs: get_next_scheduled_date
-    uses: route06/actions/.github/workflows/create_discussion.yml@v2
+    uses: route06/actions/.github/workflows/create_discussion.yml@add-get-next-scheduled-date-workflow
     with:
       title: ${{ needs.get_next_scheduled_date.outputs.next_scheduled_date }} $TITLE
       discussion_category_slug: $DISCUSSION_CATEGORY_SLUG
