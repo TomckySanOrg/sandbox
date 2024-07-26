@@ -21,6 +21,23 @@ jobs:
           script: |
             const fs = require("fs");
 
+            const createDisussionCommentMutation = `mutation($body:String!, $discussion_id:ID!) {
+              addDiscussionComment(input: {discussionId: $discussion_id, body: $body}) {
+                comment {
+                  id
+                }
+              }
+            }`;
+
+            async function createDisussionComment(github, discussionId, body) {
+              const result = await github.graphql(createDisussionCommentMutation, {
+                body,
+                discussion_id: discussionId,
+              });
+
+              return result.addDiscussionComment.comment.id;
+            }
+
             const { DISCUSSION_ID } = process.env;
 
             // replace_values.jsonlに埋め込み値を入れとく
