@@ -12,4 +12,4 @@ jobs:
     uses: route06/actions/.github/workflows/add_discussion_comment.yml@draft-TomckySan-add-discussion-comment-workflow
     with:
       discussion_id: "D_kwDOMRygUc4AaVhV"
-      comment_seed_path: "_templates/weekly_meeting_discussion/seed.jsonl"
+      comment_seed_path: "_templates/seed.jsonl"
