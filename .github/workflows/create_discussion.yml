@@ -1,0 +1,20 @@
+name: Create discussion
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create_discussion:
+    uses: route06/actions/.github/workflows/create_gh_discussion.yml@update-workflow
+    with:
+      title: タイトル
+      category_slug: ideas
+      description_template_path: _templates/weekly_meeting_discussion/huddle.md
+
+  log_result:
+    runs-on: ubuntu-latest
+    needs: [create_discussion]
+    steps:
+      - name: Log a discussion id
+        run: |
+          echo "A discussion is: ${{ needs.create_discussion.outputs.discussion_id }}"
