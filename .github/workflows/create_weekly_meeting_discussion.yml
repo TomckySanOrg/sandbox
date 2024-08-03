@@ -15,7 +15,7 @@ jobs:
     with:
       interval: weekly
       # NOTE: ミーティング実施曜日を指定してください。
-      # 金曜日の場合は target_day: friday となります。
+      # 金曜日に実施する場合は target_day: friday となります。
       target_day: wednesday
   
   create_discussion:
