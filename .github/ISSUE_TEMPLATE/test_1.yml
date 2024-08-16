@@ -1,0 +1,16 @@
+name: テスト
+description: これはテストです
+title: タイトル
+body:
+  - type: input
+    attributes:
+      label: テスト1
+      description: ほげほげ
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: テスト2
+      description: ふがふが
+    validations:
+      required: true
