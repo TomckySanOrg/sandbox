@@ -28,8 +28,8 @@ jobs:
       - name: Get project data
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
-          ORGANIZATION: YOUR_ORGANIZATION
-          PROJECT_NUMBER: YOUR_PROJECT_NUMBER
+          ORGANIZATION: TomckySan
+          PROJECT_NUMBER: 1
         run: |
           gh api graphql -f query='
           query($org: String!, $number: Int!) {
