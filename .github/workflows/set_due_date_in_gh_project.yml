@@ -18,6 +18,13 @@ jobs:
           echo "Due date: $due_date"
           echo "due_date=$due_date" >> $GITHUB_ENV
 
+      - name: Generate token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PEM }}
+
       - name: Add issue to GitHub Project
         uses: actions/github-script@v7
         id: add_to_project
