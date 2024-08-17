@@ -3,12 +3,14 @@ description: これはテストです
 title: タイトル
 body:
   - type: input
+    id: due_date
     attributes:
       label: テスト1
       description: ほげほげ
     validations:
       required: true
   - type: textarea
+    id: fuga
     attributes:
       label: テスト2
       description: ふがふが
