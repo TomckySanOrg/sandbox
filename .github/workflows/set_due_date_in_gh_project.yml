@@ -4,8 +4,6 @@ on:
   issues:
     types: [opened, edited]
 
-permissions: write-all
-
 jobs:
   set_due_date:
     runs-on: ubuntu-latest
@@ -49,7 +47,7 @@ jobs:
 
             const itemId = response.addProjectV2ItemById.item.id;
             console.log(`Item added to project with ID: ${itemId}`);
-            return { itemId: itemId };
+            core.setOutput("item_id", itemId);
 
       - name: Set Due Date in GitHub Project
         if: env.due_date != ''
@@ -58,7 +56,7 @@ jobs:
           github-token: ${{ steps.generate-token.outputs.token }}
           script: |
             const projectId = 'PVT_kwDOCqYGf84AmW_O';
-            const itemId = context.payload.issue.node_id;
+            const itemId = '${{ steps.add_to_project.outputs.item_id }}';
             const fieldId = 'PVTF_lADOCqYGf84AmW_OzgeR5_I';
 
             await github.graphql(`
