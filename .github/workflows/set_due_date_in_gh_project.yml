@@ -56,9 +56,9 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const projectId = '<your-project-id>';
+            const projectId = 'PVT_kwDOCqYGf84AmW_O';
             const itemId = context.payload.issue.node_id;
-            const fieldId = '<your-custom-field-id>';  // カスタムフィールドのID
+            const fieldId = 'PVTF_lADOCqYGf84AmW_OzgeR5_I';
 
             await github.graphql(`
               mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $dueDate: Date!) {
