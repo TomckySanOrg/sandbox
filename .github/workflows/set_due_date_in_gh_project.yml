@@ -4,6 +4,9 @@ on:
   issues:
     types: [opened, edited]
 
+permissions:
+  repository-projects: write
+
 jobs:
   set_due_date:
     runs-on: ubuntu-latest
