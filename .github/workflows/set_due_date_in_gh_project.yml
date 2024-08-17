@@ -12,9 +12,8 @@ jobs:
       - name: Extract due date from issue description
         id: extract_due_date
         run: |
-          description="${{ github.event.issue.body }}"
-          due_date=$(echo "$description" | sed -n 's/^.*Due Date: \([0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}\).*$/\1/p')
-          echo "Debug: $due_date"
+          due_date=$(echo "${{ github.event.issue.body }}" | sed -n '/### テスト1/,/###/p' | sed '1d;$d')
+          echo "Due date: $due_date"
           echo "due_date=$due_date" >> $GITHUB_ENV
 
       - name: Check if due date was found
