@@ -62,13 +62,13 @@ jobs:
 
             await github.graphql(`
               mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $dueDate: Date!) {
-                updateProjectNextItemField(input: {
+                updateProjectV2ItemFieldValue(input: {
                   projectId: $projectId,
                   itemId: $itemId,
                   fieldId: $fieldId,
                   value: $dueDate
                 }) {
-                  projectNextItem {
+                  projectV2Item {
                     id
                   }
                 }
