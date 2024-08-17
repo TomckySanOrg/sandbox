@@ -12,7 +12,7 @@ jobs:
       - name: Extract due date from issue description
         id: extract_due_date
         run: |
-          due_date=$(echo "${{ github.event.issue.body }}" | sed -n '/### テスト1/,/###/p' | sed '1d;$d')
+          due_date=$(echo "${{ github.event.issue.body }}" | sed -n '/### テスト1/,/###/p' | sed '1d;$d' | tr -d '\n')
           echo "Due date: $due_date"
           echo "due_date=$due_date" >> $GITHUB_ENV
 
