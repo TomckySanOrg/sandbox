@@ -8,18 +8,13 @@ jobs:
   log_issue_form_data:
     runs-on: ubuntu-latest
     steps:
-    - name: Install jq
-      run: sudo apt-get install jq
-
-    - name: Log the entire Issue body
-      run: echo "${{ github.event.issue.body }}" > issue_body.txt
 
     - name: Extract and Log Due Date
       run: |
-        due_date=$(echo "${{ github.event.issue.body }}" | jq -r '. | select(.due_date != null) | .due_date')
+        due_date=$(echo "${{ github.event.issue.body }}" | sed -n '/### テスト1/,/###/p' | sed '1d;$d')
         echo "Due date: $due_date"
 
     - name: Extract and Log Fuga
       run: |
-        fuga=$(echo "${{ github.event.issue.body }}" | jq -r '. | select(.fuga != null) | .fuga')
+        fuga=$(echo "${{ github.event.issue.body }}" | sed -n '/### テスト2/,/###/p' | sed '1d;$d')
         echo "Fuga: $fuga"
