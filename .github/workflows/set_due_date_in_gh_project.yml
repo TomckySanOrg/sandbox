@@ -16,10 +16,30 @@ jobs:
           echo "Due date: $due_date"
           echo "due_date=$due_date" >> $GITHUB_ENV
 
-      - name: Check if due date was found
-        if: env.due_date != ''
-        run: |
-          echo "Due date found: ${{ env.due_date }}"
+      - name: Add issue to GitHub Project
+        uses: actions/github-script@v7
+        id: add_to_project
+        with:
+          script: |
+            const projectId = 'PVT_kwHOADXm_M4AkpWI';
+            const contentId = context.payload.issue.node_id;
+
+            const response = await github.graphql(`
+              mutation($projectId: ID!, $contentId: ID!) {
+                addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+                  item {
+                    id
+                  }
+                }
+              }
+            `, {
+              projectId: projectId,
+              contentId: contentId,
+            });
+
+            const itemId = response.addProjectV2ItemById.item.id;
+            console.log(`Item added to project with ID: ${itemId}`);
+            return { itemId: itemId };
 
       - name: Set Due Date in GitHub Project
         if: env.due_date != ''
