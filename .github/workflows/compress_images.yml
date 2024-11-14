@@ -103,7 +103,8 @@ jobs:
                 }
 
                 // 圧縮した画像を上書き保存
-                const tmpPath = `tmp${ext}`;
+                const dir = path.dirname(inputPath);
+                const tmpPath = path.join(dir, `tmp${ext}`);
                 await image.toFile(tmpPath);
                 await fs.rename(tmpPath, inputPath);
                 console.log(`Image compressed and saved to ${outputPath}`);
