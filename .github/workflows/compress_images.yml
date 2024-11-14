@@ -28,29 +28,28 @@ jobs:
       #    app-id: ${{ vars.APP_ID }}
       #    private-key: ${{ secrets.APP_PEM }}
 
-      ## 画像ファイルが変更された場合のみstepを実行
-      #- name: Find changed images
-      #  id: changed-images
-      #  uses: tj-actions/changed-files@v45
-      #  with:
-      #    files: |
-      #      **.jpg
-      #      **.jpeg
-      #      **.png
-      #      **.webp
+      # 画像ファイルが変更された場合のみstepを実行
+      - name: Find changed images
+        id: changed-images
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            **.jpg
+            **.jpeg
+            **.png
 
       - name: Setup Node.js
-        #if: steps.changed-images.outputs.any_changed == 'true'
+        if: steps.changed-images.outputs.any_changed == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install sharp
-        #if: steps.changed-images.outputs.any_changed == 'true'
+        if: steps.changed-images.outputs.any_changed == 'true'
         run: npm install sharp
 
       - name: Compress images
-        #if: steps.changed-images.outputs.any_changed == 'true'
+        if: steps.changed-images.outputs.any_changed == 'true'
         uses: actions/github-script@v7
         with:
           script: |
@@ -77,13 +76,6 @@ jobs:
 
             async function compressImage(inputPath) {
               try {
-                const ext = path.extname(inputPath).toLowerCase();
-
-                if (!['.jpg', '.jpeg', '.png'].includes(ext)) {
-                  console.error('対応している拡張子はjpgまたはpngのみです。');
-                  return;
-                }
-
                 let image = sharp(inputPath);
 
                 // 画像の横幅を確認して1200pxを超えていた場合にリサイズ
@@ -96,6 +88,7 @@ jobs:
                 // 圧縮
                 const quality = 50;  // 圧縮品質（1〜100の範囲で指定）
                 const compressionLevel = 9;  // 圧縮レベル（0〜9の範囲で指定）
+                const ext = path.extname(inputPath).toLowerCase();
                 if (ext === '.png') {
                   image = image.png({ quality, compressionLevel });
                 } else {
@@ -113,13 +106,13 @@ jobs:
               }
             }
 
-            Promise.all(imageFiles.map(compressImage));
+            await Promise.all(imageFiles.map(compressImage));
 
-      #- name: Commit and push changes
-      #  #if: steps.changed-images.outputs.any_changed == 'true'
-      #  run: |
-      #    git config --global user.name 'github-actions[bot]'
-      #    git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-      #    git add .
-      #    git commit -m "dummy commit." || echo "No changes to commit"
-      #    git push origin ${{ github.event.pull_request.head.ref }}
+      - name: Commit and push changes
+        if: steps.changed-images.outputs.any_changed == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m "Compress images." || echo "No changes to commit"
+          git push origin ${{ github.event.pull_request.head.ref }}
