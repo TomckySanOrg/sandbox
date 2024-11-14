@@ -113,6 +113,9 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add '**/*.png' '**/*.jpg' '**/*.jpeg'
+          # 変更された画像ファイルのみを追加
+          for file in $(echo "${{ steps.changed-images.outputs.all_changed_files }}" | tr ',' '\n'); do
+            git add "$file"
+          done
           git commit -m "Compress images." || echo "No changes to commit"
           git push origin ${{ github.event.pull_request.head.ref }}
