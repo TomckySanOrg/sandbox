@@ -107,7 +107,7 @@ jobs:
                 const tmpPath = path.join(dir, `tmp${ext}`);
                 await image.toFile(tmpPath);
                 await fs.rename(tmpPath, inputPath);
-                console.log(`Image compressed and saved to ${outputPath}`);
+                console.log(`Image compressed and saved to ${inputPath}`);
               } catch (error) {
                 console.error('Error compressing the image:', error);
               }
