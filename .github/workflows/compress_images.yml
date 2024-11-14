@@ -19,6 +19,13 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
       #    token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate token
+        id: generate-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PEM }}
+
       ## 画像ファイルが変更された場合のみstepを実行
       #- name: Find changed images
       #  id: changed-images
@@ -91,3 +98,5 @@ jobs:
           git add .
           git commit -m "dummy commit." || echo "No changes to commit"
           git push origin ${{ github.event.pull_request.head.ref }}
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
