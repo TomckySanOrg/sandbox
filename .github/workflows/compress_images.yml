@@ -75,37 +75,44 @@ jobs:
               imageFiles.forEach(file => console.log(file));
             }
 
-            //async function compressImage(filePath) {
-            //  const ext = path.extname(filePath).toLowerCase();
-            //  const image = sharp(filePath);
-            //  
-            //  let options = {};
-            //  switch (ext) {
-            //    case '.jpg':
-            //    case '.jpeg':
-            //      options = { quality: 85 };
-            //      break;
-            //    case '.png':
-            //      options = { compressionLevel: 9 };
-            //      break;
-            //    case '.webp':
-            //      options = { quality: 85 };
-            //      break;
-            //  }
-            //  
-            //  try {
-            //    await image
-            //      .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
-            //      .toBuffer()
-            //      .then(data => fs.writeFileSync(filePath, data));
-            //    
-            //    console.log(`✅ Compressed: ${filePath}`);
-            //  } catch (error) {
-            //    console.error(`❌ Error compressing ${filePath}:`, error);
-            //  }
-            //}
+            async function compressImage(inputPath) {
+              try {
+                const ext = path.extname(inputPath).toLowerCase();
 
-            //Promise.all(files.map(compressImage));
+                if (!['.jpg', '.jpeg', '.png'].includes(ext)) {
+                  console.error('対応している拡張子はjpgまたはpngのみです。');
+                  return;
+                }
+
+                let image = sharp(inputPath);
+
+                // 画像の横幅を確認して1200pxを超えていた場合にリサイズ
+                const metadata = await image.metadata();
+                if (metadata.width > 1200) {
+                  image = image.resize({ width: 1200 });
+                  console.log(`Image resized to width 1200px.`);
+                }
+
+                // 圧縮
+                const quality = 50;  // 圧縮品質（1〜100の範囲で指定）
+                const compressionLevel = 9;  // 圧縮レベル（0〜9の範囲で指定）
+                if (ext === '.png') {
+                  image = image.png({ quality, compressionLevel });
+                } else {
+                  image = image.jpeg({ quality });
+                }
+
+                // 圧縮した画像を上書き保存
+                const tmpPath = `tmp${ext}`;
+                await image.toFile(tmpPath);
+                await fs.rename(tmpPath, inputPath);
+                console.log(`Image compressed and saved to ${outputPath}`);
+              } catch (error) {
+                console.error('Error compressing the image:', error);
+              }
+            }
+
+            Promise.all(imageFiles.map(compressImage));
 
       #- name: Commit and push changes
       #  #if: steps.changed-images.outputs.any_changed == 'true'
