@@ -1,0 +1,93 @@
+name: Compress Images
+
+# PRをトリガーにして、画像ファイルが変更された場合のみ実行
+on:
+  pull_request:
+    #paths:
+    #  - '**.jpg'
+    #  - '**.jpeg'
+    #  - '**.png'
+    #  - '**.webp'
+
+jobs:
+  compress-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      #    token: ${{ secrets.GITHUB_TOKEN }}
+
+      ## 画像ファイルが変更された場合のみstepを実行
+      #- name: Find changed images
+      #  id: changed-images
+      #  uses: tj-actions/changed-files@v45
+      #  with:
+      #    files: |
+      #      **.jpg
+      #      **.jpeg
+      #      **.png
+      #      **.webp
+
+      #- name: Setup Node.js
+      #  if: steps.changed-images.outputs.any_changed == 'true'
+      #  uses: actions/setup-node@v4
+      #  with:
+      #    node-version: '20'
+
+      #- name: Install sharp
+      #  if: steps.changed-images.outputs.any_changed == 'true'
+      #  run: npm install sharp
+
+      #- name: Compress images
+      #  if: steps.changed-images.outputs.any_changed == 'true'
+      #  uses: actions/github-script@v7
+      #  with:
+      #    script: |
+      #      const sharp = require('sharp');
+      #      const fs = require('fs');
+      #      const path = require('path');
+      #      const files = process.argv.slice(2);
+      #      async function compressImage(filePath) {
+      #        const ext = path.extname(filePath).toLowerCase();
+      #        const image = sharp(filePath);
+      #        
+      #        let options = {};
+      #        switch (ext) {
+      #          case '.jpg':
+      #          case '.jpeg':
+      #            options = { quality: 85 };
+      #            break;
+      #          case '.png':
+      #            options = { compressionLevel: 9 };
+      #            break;
+      #          case '.webp':
+      #            options = { quality: 85 };
+      #            break;
+      #        }
+      #        
+      #        try {
+      #          await image
+      #            .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
+      #            .toBuffer()
+      #            .then(data => fs.writeFileSync(filePath, data));
+      #          
+      #          console.log(`✅ Compressed: ${filePath}`);
+      #        } catch (error) {
+      #          console.error(`❌ Error compressing ${filePath}:`, error);
+      #        }
+      #      }
+      #      Promise.all(files.map(compressImage));
+
+      - name: Create a new file
+        run: echo "This is a new file created by GitHub Actions." > new-file.txt
+
+      - name: Commit and push changes
+        #if: steps.changed-images.outputs.any_changed == 'true'
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m "dummy commit." || echo "No changes to commit"
+          git push origin ${{ github.event.pull_request.head.ref }}
