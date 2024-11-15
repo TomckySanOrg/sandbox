@@ -1,7 +1,8 @@
 name: Push Workflow
 
 on:
-  push:
+  workflow_dispatch:
+  #push:
 
 jobs:
   build:
