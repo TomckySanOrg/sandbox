@@ -49,7 +49,7 @@ jobs:
             const path = require('path');
             const fs = require('fs').promises;
 
-            const commitImageFiles = ${{ steps.changed-images.outputs.all_changed_files }}
+            const commitImageFiles = "${{ steps.changed-images.outputs.all_changed_files }}"
               .split(',')
               .filter(file => ['.png', '.jpg', '.jpeg'].some(ext => file.toLowerCase().endsWith(ext)));
 
