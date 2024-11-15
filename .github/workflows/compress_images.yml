@@ -59,50 +59,45 @@ jobs:
 
             const prNumber = context.payload.pull_request.number;
 
+            // 最新コミットに含まれる画像ファイルを対象に圧縮を実施
             const { data: commits } = await github.rest.pulls.listCommits({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: prNumber
             });
-
-            // 最新のコミットを取得
             const latestCommit = commits[commits.length - 1];
-            // 最新のコミットで変更されたファイルを取得
             const { data: commitData } = await github.rest.repos.getCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: latestCommit.sha
             });
-
-            // 対象拡張子
-            const imageExtensions = ['.png', '.jpg', '.jpeg'];
-            // 画像ファイルのリスト
             const commitImageFiles = commitData.files
-              .filter(file => imageExtensions.some(ext => file.filename.toLowerCase().endsWith(ext)))
+              .filter(file => ['.png', '.jpg', '.jpeg'].some(ext => file.filename.toLowerCase().endsWith(ext)))
               .map(file => file.filename);
 
-            if (commitImageFiles.length > 0) {
+            if (commitImageFiles.length === 0) {
+              console.log('最新のコミットに画像ファイルの更新は含まれていません。');
+              return;
+            } else {
               console.log('最新のコミットには以下の画像ファイルの更新が含まれています:');
               commitImageFiles.forEach(file => console.log(`- ${file}`));
-            } else {
-              console.log('最新のコミットに画像ファイルの更新は含まれていません。');
             }
 
-            const files = await github.paginate("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
-            const imageFiles = files
-              .filter(file => /\.(png|jpe?g|gif)$/i.test(file.filename))
-              .map(file => file.filename);
+            // const files = await github.paginate("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
+            //   owner: context.repo.owner,
+            //   repo: context.repo.repo,
+            //   pull_number: prNumber
+            // });
+            // const imageFiles = files
+            //   .filter(file => /\.(png|jpe?g|gif)$/i.test(file.filename))
+            //   .map(file => file.filename);
 
-            if (imageFiles.length === 0) {
-              console.log("No image files changed.");
-            } else {
-              console.log("Changed image files:");
-              imageFiles.forEach(file => console.log(file));
-            }
+            // if (imageFiles.length === 0) {
+            //   console.log("No image files changed.");
+            // } else {
+            //   console.log("Changed image files:");
+            //   imageFiles.forEach(file => console.log(file));
+            // }
 
             async function compressImage(inputPath) {
               try {
@@ -136,7 +131,7 @@ jobs:
               }
             }
 
-            await Promise.all(imageFiles.map(compressImage));
+            await Promise.all(commitImageFiles.map(compressImage));
 
       - name: Commit and push changes
         if: steps.changed-images.outputs.any_changed == 'true'
