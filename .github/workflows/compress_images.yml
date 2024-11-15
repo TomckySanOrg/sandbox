@@ -58,6 +58,18 @@ jobs:
             const fs = require('fs').promises;
 
             const prNumber = context.payload.pull_request.number;
+
+            const { data: commits } = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+
+            // コミットメッセージのリストを表示する例
+            for (const commit of commits) {
+              console.log(`Commit message: ${commit.commit.message}`);
+            }
+
             const files = await github.paginate("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
               owner: context.repo.owner,
               repo: context.repo.repo,
