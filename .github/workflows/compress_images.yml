@@ -50,7 +50,7 @@ jobs:
             const fs = require('fs').promises;
 
             const commitImageFiles = "${{ steps.changed-images.outputs.all_changed_files }}"
-              .split(',')
+              .split(' ')
               .filter(file => ['.png', '.jpg', '.jpeg'].some(ext => file.toLowerCase().endsWith(ext)));
 
             if (commitImageFiles.length === 0) {
