@@ -21,14 +21,6 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
-      #- name: Generate token
-      #  id: generate-token
-      #  uses: actions/create-github-app-token@v1
-      #  with:
-      #    app-id: ${{ vars.APP_ID }}
-      #    private-key: ${{ secrets.APP_PEM }}
-
-      # 画像ファイルが変更された場合のみstepを実行
       - name: Find changed images
         id: changed-images
         uses: tj-actions/changed-files@v45
@@ -57,49 +49,17 @@ jobs:
             const path = require('path');
             const fs = require('fs').promises;
 
-            const prNumber = context.payload.pull_request.number;
-
-            // 最新コミットに含まれる画像ファイルを対象に圧縮を実施
-            const { data: commits } = await github.rest.pulls.listCommits({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
-            const latestCommit = commits[commits.length - 1];
-            const { data: commitData } = await github.rest.repos.getCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: latestCommit.sha
-            });
-            const commitImageFiles = commitData.files
-              .filter(file => ['.png', '.jpg', '.jpeg'].some(ext => file.filename.toLowerCase().endsWith(ext)))
-              .map(file => file.filename);
+            const commitImageFiles = ${{ steps.changed-images.outputs.all_changed_files }}
+              .split(',')
+              .filter(file => ['.png', '.jpg', '.jpeg'].some(ext => file.toLowerCase().endsWith(ext)));
 
             if (commitImageFiles.length === 0) {
               console.log('最新のコミットに画像ファイルの更新は含まれていません。');
               return;
-            } else {
-              console.log('最新のコミットには以下の画像ファイルの更新が含まれています:');
-              commitImageFiles.forEach(file => console.log(`- ${file}`));
             }
 
-            // const files = await github.paginate("GET /repos/{owner}/{repo}/pulls/{pull_number}/files", {
-            //   owner: context.repo.owner,
-            //   repo: context.repo.repo,
-            //   pull_number: prNumber
-            // });
-            // const imageFiles = files
-            //   .filter(file => /\.(png|jpe?g|gif)$/i.test(file.filename))
-            //   .map(file => file.filename);
-
-            // if (imageFiles.length === 0) {
-            //   console.log("No image files changed.");
-            // } else {
-            //   console.log("Changed image files:");
-            //   imageFiles.forEach(file => console.log(file));
-            // }
-
             async function compressImage(inputPath) {
+              console.log('Compressing image:', inputPath);
               try {
                 let image = sharp(inputPath);
 
