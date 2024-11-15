@@ -77,13 +77,13 @@ jobs:
             // 対象拡張子
             const imageExtensions = ['.png', '.jpg', '.jpeg'];
             // 画像ファイルのリスト
-            const imageFiles = commitData.files
+            const commitImageFiles = commitData.files
               .filter(file => imageExtensions.some(ext => file.filename.toLowerCase().endsWith(ext)))
               .map(file => file.filename);
 
-            if (imageFiles.length > 0) {
+            if (commitImageFiles.length > 0) {
               console.log('最新のコミットには以下の画像ファイルの更新が含まれています:');
-              imageFiles.forEach(file => console.log(`- ${file}`));
+              commitImageFiles.forEach(file => console.log(`- ${file}`));
             } else {
               console.log('最新のコミットに画像ファイルの更新は含まれていません。');
             }
